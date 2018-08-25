@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "718288593864",
+    "firebase_url": "https://concessionform.firebaseio.com",
+    "project_id": "concessionform",
+    "storage_bucket": "concessionform.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718288593864:android:3bdddafdf081aeed",
+        "android_client_info": {
+          "package_name": "com.concessionform.rajmehta.concessionform"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "718288593864-mbs5548klhtnkh178h8dh6d7bolbqgdi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNQr6WZwLBjTv76cW_mD0IMm0M0X-glA0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
