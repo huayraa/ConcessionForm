@@ -140,7 +140,6 @@ public class HomePage extends AppCompatActivity /*implements NavigationView.OnNa
         List<String> concession = new ArrayList<String>();
         concession.add("Apply for new form");
         concession.add("Check Form Status");
-
         listDataChild.put(listDataHeader.get(0),concession);
     }
 
