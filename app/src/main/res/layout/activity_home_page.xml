@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    tools:openDrawer="start"
     tools:context=".HomePage">
 
     <LinearLayout
@@ -38,8 +39,20 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:background="#000000"
+        app:itemTextColor="#FFFFFF"
         app:menu="@menu/drawer_view"
         app:headerLayout="@layout/nav_header">
+
+        <ExpandableListView
+        android:id="@+id/lvExp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+            android:layout_marginTop="190dp"
+        android:background="@android:color/white"
+        android:dividerHeight="0dp"
+        android:groupIndicator="@null" />
+
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

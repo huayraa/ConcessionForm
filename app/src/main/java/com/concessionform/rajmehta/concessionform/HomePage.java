@@ -2,6 +2,8 @@ package com.concessionform.rajmehta.concessionform;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -13,27 +15,35 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static java.security.AccessController.getContext;
 
-public class HomePage extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+public class HomePage extends AppCompatActivity /*implements NavigationView.OnNavigationItemSelectedListener*/{
 
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
     private int hold;
+    ExpandableListAdapter listAdapter;
+    ExpandableListView expListView;
+    List<String> listDataHeader;
+    HashMap<String, List<String>> listDataChild;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +57,38 @@ public class HomePage extends AppCompatActivity implements AdapterView.OnItemSel
         mDrawer.addDrawerListener(drawerToggle);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
         setupDrawerContent(nvDrawer);
 
-        final Spinner spinnner = (Spinner) nvDrawer.getMenu().findItem(R.id.spinner).getActionView();
+        expListView = findViewById(R.id.lvExp);
+        prepareListData();
+        listAdapter = new com.concessionform.rajmehta.concessionform.ExpandableListAdapter(this, listDataHeader, listDataChild);
+        expListView.setAdapter(listAdapter);
+
+        expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                Toast.makeText(getApplicationContext(), "Group Clickec", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+        expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+            @Override
+            public void onGroupCollapse(int groupPosition) {
+                Toast.makeText(getApplicationContext(),"Collapsed", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " : " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+       /* final Spinner spinnner;
+        spinnner = (Spinner) nvDrawer.getMenu().findItem(R.id.spinner).getActionView();
         //spinnner.setOnItemSelectedListener(this);
 
         List<String> categories = new ArrayList<String>();
@@ -87,9 +126,23 @@ public class HomePage extends AppCompatActivity implements AdapterView.OnItemSel
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
-        });
+        });*/
     }
 
+    private void prepareListData(){
+        listDataHeader = new ArrayList<String>();
+        listDataChild = new HashMap<String, List<String>>();
+
+        listDataHeader.add("Railway Concession");
+        listDataHeader.add("Contact Us");
+        listDataHeader.add("About");
+
+        List<String> concession = new ArrayList<String>();
+        concession.add("Apply for new form");
+        concession.add("Check Form Status");
+
+        listDataChild.put(listDataHeader.get(0),concession);
+    }
 
     private ActionBarDrawerToggle setupDrawerToggle(){
         return new ActionBarDrawerToggle(this,mDrawer,R.string.drawer_open,R.string.drawer_close);
@@ -162,17 +215,6 @@ public class HomePage extends AppCompatActivity implements AdapterView.OnItemSel
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
     /*@Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
