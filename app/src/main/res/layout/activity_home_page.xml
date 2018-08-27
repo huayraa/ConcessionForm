@@ -24,12 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <fragment
-                android:name="com.concessionform.rajmehta.concessionform.FirstFragment"
-                android:id="@+id/fooFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
         </FrameLayout>
 
     </LinearLayout>
@@ -51,7 +45,9 @@
             android:layout_marginTop="190dp"
         android:background="@android:color/white"
         android:dividerHeight="0dp"
-        android:groupIndicator="@null" />
+            android:divider="@null"
+            android:transcriptMode="alwaysScroll"
+        android:groupIndicator="@drawable/group_indicator" />
 
     </android.support.design.widget.NavigationView>
 

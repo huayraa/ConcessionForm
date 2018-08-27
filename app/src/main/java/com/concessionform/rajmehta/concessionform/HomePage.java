@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -15,7 +16,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,40 +30,74 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import static java.security.AccessController.getContext;
 
-public class HomePage extends AppCompatActivity /*implements NavigationView.OnNavigationItemSelectedListener*/{
+public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener /*implements NavigationView.OnNavigationItemSelectedListener*/{
 
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
-    private int hold;
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
+    DisplayMetrics metrics = new DisplayMetrics();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         mDrawer = findViewById(R.id.drawer_layout);
+
         nvDrawer = findViewById(R.id.nav_view);
+        nvDrawer.setNavigationItemSelectedListener(this);
+
         drawerToggle = setupDrawerToggle();
         mDrawer.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
-        setupDrawerContent(nvDrawer);
+        //setupDrawerContent(nvDrawer);
 
         expListView = findViewById(R.id.lvExp);
+
+        View hView = nvDrawer.getHeaderView(0);
+        final TextView emaildisp = hView.findViewById(R.id.emaildisp);
+        final TextView sapdisp = hView.findViewById(R.id.sapdisp);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                if(firebaseUser!=null){
+                    String email = firebaseUser.getEmail();
+                    String sapid = firebaseUser.getUid();
+                    emaildisp.setText(email);
+                    sapdisp.setText(sapid);
+                }
+            }
+        };
+
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int width = metrics.widthPixels;
+        expListView.setIndicatorBoundsRelative(width - GetPixelFromDips(50), width - GetPixelFromDips(10));
+
         prepareListData();
         listAdapter = new com.concessionform.rajmehta.concessionform.ExpandableListAdapter(this, listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);
@@ -68,7 +105,7 @@ public class HomePage extends AppCompatActivity /*implements NavigationView.OnNa
         expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                Toast.makeText(getApplicationContext(), "Group Clickec", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Group Clicked", Toast.LENGTH_LONG).show();
                 return false;
             }
         });
@@ -83,50 +120,73 @@ public class HomePage extends AppCompatActivity /*implements NavigationView.OnNa
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " : " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
-                return false;
+
+                int cp = (int) listAdapter.getChildId(groupPosition, childPosition);
+                /*Fragment fragment = null;
+                Class fragmentClass;
+
+                switch (cp){
+                    case 0:
+                        fragmentClass = FirstFragment.class;
+                        break;
+                    case 1:
+                        fragmentClass = SecondFragment.class;
+                        break;
+                    default:
+                        fragmentClass = FirstFragment.class;
+                }
+                try{
+                    fragment = (Fragment) fragmentClass.newInstance();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.flContent,fragment).commit();
+                mDrawer.closeDrawers();*/
+
+                if(cp==0){
+                    loadFragment(new FirstFragment());
+                    Toast.makeText(getApplicationContext(),"Pahila fragment daba",Toast.LENGTH_LONG).show();
+                }
+                if(cp==1){
+                    loadFragment(new SecondFragment());
+                    Toast.makeText(getApplicationContext(), "Dui fragment daba", Toast.LENGTH_LONG).show();
+                }
+                //Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " : " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
-       /* final Spinner spinnner;
-        spinnner = (Spinner) nvDrawer.getMenu().findItem(R.id.spinner).getActionView();
-        //spinnner.setOnItemSelectedListener(this);
+    }
 
-        List<String> categories = new ArrayList<String>();
-        categories.add("Concession Form");
-        categories.add("Apply for new form");
-        categories.add("Check Form Status");
+    private void loadFragment(Fragment fragment){
+        //Fragment fragment = null;
+        /*FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.flContent, fragment).commit();*/
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories){
-            @Override
-            public View getDropDownView(int position, View view, ViewGroup parent){
-                View v = null;
-                if(position==0){
-                    TextView tv = new TextView(getContext());
-                    tv.setHeight(0);
-                    tv.setVisibility(View.GONE);
-                    v = tv;
-                }
-                else {
-                    v = super.getDropDownView(position,null,parent);
-                }
-                parent.setVerticalScrollBarEnabled(false);
-                return v;
-            }
-        };
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnner.setAdapter(dataAdapter);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.flContent, fragment);
+        fragmentTransaction.commit();
+        fragmentTransaction.addToBackStack(null);
+        DrawerLayout mDrawer = findViewById(R.id.drawer_layout);
+        mDrawer.closeDrawer(GravityCompat.START);
+    }
 
-        spinnner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                hold = spinnner.getSelectedItemPosition()+1;
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });*/
+    public int GetPixelFromDips(float pixels) {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
     }
 
     private void prepareListData(){
@@ -161,7 +221,7 @@ public class HomePage extends AppCompatActivity /*implements NavigationView.OnNa
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private void setupDrawerContent(NavigationView navigationView){
+    /*private void setupDrawerContent(NavigationView navigationView){
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -171,42 +231,13 @@ public class HomePage extends AppCompatActivity /*implements NavigationView.OnNa
                     }
                 }
         );
-    }
-
-    public void selectDrawerItem(MenuItem menuItem){
-        Fragment fragment = null;
-        Class fragmentClass;
-
-        switch (menuItem.getItemId()){
-            /*case R.id.nav_home:
-                fragmentClass = FirstFragment.class;
-                break;*/
-            case R.id.nav_contact:
-                fragmentClass = SecondFragment.class;
-                break;
-            case R.id.nav_about:
-                fragmentClass = ThirdFragment.class;
-                break;
-            default:
-                fragmentClass = FirstFragment.class;
-        }
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-        menuItem.setChecked(true);
-        setTitle(menuItem.getTitle());
-        mDrawer.closeDrawers();
-        }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        /*if (drawerToggle.onOptionsItemSelected(item)) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
-        }*/
+        }
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
@@ -214,19 +245,9 @@ public class HomePage extends AppCompatActivity /*implements NavigationView.OnNa
         }
         return super.onOptionsItemSelected(item);
     }
-    /*@Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // On selecting a spinner item
-        //String item = parent.getItemAtPosition(position).toString();
-        //Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
-        if(hold == 2){
-
-        }
-    }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }*/
-
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
+    }
 }

@@ -1,6 +1,4 @@
 package com.concessionform.rajmehta.concessionform;
-
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 public class FirstFragment extends Fragment {
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -20,8 +16,9 @@ public class FirstFragment extends Fragment {
         return inflater.inflate(R.layout.first_fragment, container, false);
     }
 
-    @Override
+
+    /*@Override
     public void onViewCreated(View view, Bundle savedInstanceState){
 
-    }
+    }*/
 }
