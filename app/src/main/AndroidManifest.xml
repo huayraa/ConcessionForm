@@ -11,18 +11,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginPage">
+        <activity android:name=".SigninPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SigninPage" />
+        <activity android:name=".LoginPage" />
         <activity android:name=".HomePage" />
         <activity android:name=".FirstFragment" />
         <activity android:name=".SecondFragment" />
-        <activity android:name=".ThirdFragment"></activity>
+        <activity android:name=".ThirdFragment" />
+        <activity
+            android:name=".UserDetails"
+            android:label="@string/title_activity_user_details"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

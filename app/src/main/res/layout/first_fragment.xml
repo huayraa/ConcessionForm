@@ -1,18 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FirstFragment">
+    tools:context=".FirstFragment"
+    tools:layout_editor_absoluteY="25dp ">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/agedisp"
+        android:textSize="18dp"
+        android:text="Age In Years"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="40dp"/>
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/agefield"
+        android:layout_below="@+id/agedisp"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/classdisp"
+        android:text="Class (First/Second)"
+        android:textSize="18sp"
+        android:layout_below="@+id/agefield"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:paddingTop="20dp" />
+
+    <Spinner
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/classdisp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/spinnerclass"
+        android:entries="@array/class1"
+        android:layout_marginTop="20dp">
+    </Spinner>
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/perioddisp"
+        android:text="Period(Monthly/Quarterly)"
+        android:textSize="18dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/spinnerclass"
+        android:layout_marginTop="25dp"/>
+
+    <Spinner
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/perioddisp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/spinnerperiod"
+        android:entries="@array/period"
+        android:layout_marginTop="20sp">
+    </Spinner>
 
     <Button
-        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="111dp"
-        android:layout_marginTop="206dp"
-        android:text="Pahila button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/spinnerperiod"
+        android:layout_marginTop="30dp"
+        android:text="Submit"
+        android:id="@+id/submitbtn"/>
+
+</android.widget.RelativeLayout>

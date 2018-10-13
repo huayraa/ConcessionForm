@@ -81,7 +81,7 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
                         if(task.isSuccessful()){
                             Toast.makeText(LoginPage.this,"Successfully Registered", Toast.LENGTH_LONG).show();
                             finish();
-                            startActivity(new Intent(getApplicationContext(),HomePage.class));
+                            startActivity(new Intent(getApplicationContext(),UserDetails.class));
                         }else{
                             Toast.makeText(LoginPage.this,"Registration Unsuccessful",Toast.LENGTH_LONG).show();
                         }
@@ -94,6 +94,7 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
     public void onClick(View v) {
         if(v==registerbutton){
             registerUser();
+            startActivity(new Intent(getApplicationContext(),UserDetails.class));
         }
 
         if(v==alreadyreg){

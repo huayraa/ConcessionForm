@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.menu.ExpandedMenuView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -45,12 +46,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
+
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
     DisplayMetrics metrics = new DisplayMetrics();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +81,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         final TextView emaildisp = hView.findViewById(R.id.emaildisp);
         final TextView sapdisp = hView.findViewById(R.id.sapdisp);
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        /*final FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -92,7 +93,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                     sapdisp.setText(sapid);
                 }
             }
-        };
+        };*/
 
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int width = metrics.widthPixels;
@@ -105,7 +106,17 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                Toast.makeText(getApplicationContext(), "Group Clicked", Toast.LENGTH_LONG).show();
+                int cp = (int) listAdapter.getGroupId(groupPosition);
+                if(cp==1){
+                    loadFragment(new ThirdFragment());
+                }
+                if(cp==2){
+                    loadFragment(new FourthFragment());
+                }
+                if(cp==3){
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(getApplicationContext(),LoginPage.class));
+                }
                 return false;
             }
         });
@@ -116,6 +127,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 Toast.makeText(getApplicationContext(),"Collapsed", Toast.LENGTH_LONG).show();
             }
         });
+
+
 
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
@@ -147,11 +160,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
                 if(cp==0){
                     loadFragment(new FirstFragment());
-                    Toast.makeText(getApplicationContext(),"Pahila fragment daba",Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(),"Pahila fragment daba",Toast.LENGTH_LONG).show();
                 }
                 if(cp==1){
                     loadFragment(new SecondFragment());
-                    Toast.makeText(getApplicationContext(), "Dui fragment daba", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), "Dui fragment daba", Toast.LENGTH_LONG).show();
                 }
                 //Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " : " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
                 return true;
@@ -196,6 +209,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         listDataHeader.add("Railway Concession");
         listDataHeader.add("Contact Us");
         listDataHeader.add("About");
+        listDataHeader.add("Logout");
 
         List<String> concession = new ArrayList<String>();
         concession.add("Apply for new form");
