@@ -2,10 +2,13 @@ package com.concessionform.rajmehta.concessionform;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.ColorSpace;
+import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,46 +19,64 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class SigninPage extends AppCompatActivity implements View.OnClickListener{
 
+    private String tag = "YEP";
     private Button loginbutton;
-    private EditText emailfield;
+    //private EditText emailfield;
     private EditText sapfield;
     private EditText passwordfield;
     private TextView alreadyreg;
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
+    private FirebaseAuth.AuthStateListener authStateListener;
+    String userid;
+    String email1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_page);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        if(firebaseAuth.getCurrentUser()!=null){
-            finish();
-            startActivity(new Intent(getApplicationContext(),HomePage.class));
-        }
-
-        emailfield = findViewById(R.id.emailfield);
+        //emailfield = findViewById(R.id.emailfield);
         sapfield = findViewById(R.id.sapfield);
         passwordfield = findViewById(R.id.passwordfield);
         alreadyreg = findViewById(R.id.alreadyreg);
-        loginbutton = findViewById(R.id.loginbutton);
+        loginbutton = findViewById(R.id.loginbtn);
         progressDialog = new ProgressDialog(this);
 
         loginbutton.setOnClickListener(this);
         alreadyreg.setOnClickListener(this);
 
+        authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user!=null){
+                    startActivity(new Intent(getApplicationContext(),HomePage.class));
+                }
+            }
+        };
+
+
     }
 
     private void userLogin(){
-        String email = emailfield.getText().toString().trim();
-        String sapid = sapfield.getText().toString().trim();
-        String password = passwordfield.getText().toString().trim();
+       //String email = emailfield.getText().toString().trim();
+        final String sapid = sapfield.getText().toString();
+        final String password = passwordfield.getText().toString().trim();
 
-        if(TextUtils.isEmpty(email)){
-            Toast.makeText(this,"Please enter email", Toast.LENGTH_LONG).show();
+        if(TextUtils.isEmpty(sapid)){
+            Toast.makeText(this,"Please enter sap ID", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -63,21 +84,36 @@ public class SigninPage extends AppCompatActivity implements View.OnClickListene
             Toast.makeText(this,"Please enter password",Toast.LENGTH_LONG).show();
             return;
         }
-        progressDialog.setMessage("Logging In Please Wait...");
-        progressDialog.show();
 
-        firebaseAuth.signInWithEmailAndPassword(email,password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
+        Query mdatabase = FirebaseDatabase.getInstance().getReference().child("users").orderByChild("SAPID").equalTo(sapid);
+        mdatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dschild : dataSnapshot.getChildren()){
+                    userid = dschild.getKey();
+                    email1 = dschild.child("email").getValue().toString();
+                }
 
-                        if(task.isSuccessful()){
-                            finish();
-                            startActivity(new Intent(getApplicationContext(),HomePage.class));
-                        }
-                    }
-                });
+                progressDialog.setMessage("Logging In Please Wait...");
+                progressDialog.show();
+                firebaseAuth.signInWithEmailAndPassword(email1,password)
+                        .addOnCompleteListener(SigninPage.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                progressDialog.dismiss();
+                                if(task.isSuccessful()){
+                                    finish();
+                                    startActivity(new Intent(getApplicationContext(),HomePage.class));
+                                }
+                            }
+                        });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

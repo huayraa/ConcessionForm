@@ -8,99 +8,107 @@
     tools:layout_editor_absoluteY="25dp">
 
     <TextView
-        android:id="@+id/emailtext"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="127dp"
-        android:text="Email ID"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Student Portal"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="#000000"
+        android:textSize="40sp"
+        android:layout_marginTop="60sp"
+        android:layout_marginLeft="35sp"
+        android:id="@+id/portal"/>
 
     <TextView
-        android:id="@+id/passwordtext"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="214dp"
-        android:text="Password"
-        app:layout_constraintBottom_toTopOf="@+id/passwordfield"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="Welcome,"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="30sp"
+        android:layout_below="@+id/portal"
+        android:layout_marginLeft="35sp"
+        android:layout_marginTop="80sp"
+        android:id="@+id/welcome"/>
 
     <TextView
-        android:id="@+id/SAPtext"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="235dp"
-        android:text="SAP ID"
-        app:layout_constraintBottom_toTopOf="@+id/sapfield"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="please register"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="30sp"
+        android:layout_below="@+id/welcome"
+        android:layout_marginLeft="35sp"
+        android:id="@+id/please"/>
 
     <EditText
-        android:id="@+id/emailfield"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_width="260sp"
+        android:layout_height="45sp"
+        android:layout_below="@+id/please"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="157dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailtext" />
+        android:layout_marginTop="40sp"
+        android:background="@drawable/border"
+        android:hint="Email ID"
+        android:textSize="15sp"
+        android:paddingLeft="15sp"
+        android:id="@+id/emailfield"/>
 
     <EditText
-        android:id="@+id/sapfield"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/passwordtext"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_width="260sp"
+        android:layout_height="45sp"
+        android:layout_below="@+id/emailfield"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/border"
+        android:hint="SAP ID"
+        android:textSize="15sp"
+        android:paddingLeft="15sp"
+        android:id="@+id/sapfield"/>
 
     <EditText
-        android:id="@+id/passwordfield"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_width="260sp"
+        android:layout_height="45sp"
+        android:layout_below="@+id/sapfield"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="160dp"
-        android:ems="10"
+        android:background="@drawable/border"
+        android:hint="Password"
         android:inputType="textPassword"
-        app:layout_constraintBottom_toTopOf="@+id/registerbutton"
-        app:layout_constraintStart_toStartOf="@+id/sapfield" />
+        android:textSize="15sp"
+        android:paddingLeft="15sp"
+        android:id="@+id/passwordfield"/>
 
     <Button
-        android:id="@+id/registerbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_width="260sp"
+        android:layout_height="45sp"
+        android:layout_below="@+id/passwordfield"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="95dp"
-        android:text="Register"
-        app:layout_constraintBottom_toTopOf="@+id/alreadyreg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginTop="15sp"
+        android:text="REGISTER"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#0099cc"
+        android:background="@drawable/border"
+        android:id="@+id/registerbutton"/>
 
     <TextView
-        android:id="@+id/alreadyreg"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="58dp"
-        android:text="Already Registered? Sign In Here"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_below="@+id/registerbutton"
+        android:text="Already Registered?"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="15sp"
+        android:layout_marginLeft="95sp"
+        android:layout_marginTop="20sp"
+        android:id="@+id/alreg"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Login Here"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="15sp"
+        android:id="@+id/alreadyreg"
+        android:layout_below="@+id/registerbutton"
+        android:layout_marginTop="20sp"
+        android:layout_marginLeft="215sp"
+        android:textColor="#0099cc"/>
+
+
 </android.widget.RelativeLayout>

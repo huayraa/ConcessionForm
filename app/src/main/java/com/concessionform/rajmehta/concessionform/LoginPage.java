@@ -25,16 +25,15 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
     private EditText passwordfield;
     private Button registerbutton;
     private TextView alreadyreg;
-    private FirebaseAuth mAuth;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
 
-        firebaseAuth = FirebaseAuth.getInstance();
         emailfield = findViewById(R.id.emailfield);
         sapfield = findViewById(R.id.sapfield);
         passwordfield = findViewById(R.id.passwordfield);
@@ -43,13 +42,18 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
         progressDialog = new ProgressDialog(this);
         registerbutton.setOnClickListener(this);
         alreadyreg.setOnClickListener(this);
-        mAuth = FirebaseAuth.getInstance();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser!=null){
-            finish();
-            startActivity(new Intent(getApplicationContext(),HomePage.class));
-        }
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user!=null){
+                    startActivity(new Intent(getApplicationContext(),HomePage.class));
+                }
+            }
+        };
     }
 
     private void registerUser(){
