@@ -37,7 +37,7 @@ public class SigninPage extends AppCompatActivity implements View.OnClickListene
     private TextView alreadyreg;
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
-    private FirebaseAuth.AuthStateListener authStateListener;
+    //private FirebaseAuth.AuthStateListener authStateListener;
     String userid;
     String email1;
 
@@ -57,7 +57,7 @@ public class SigninPage extends AppCompatActivity implements View.OnClickListene
         loginbutton.setOnClickListener(this);
         alreadyreg.setOnClickListener(this);
 
-        authStateListener = new FirebaseAuth.AuthStateListener() {
+        /*authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -65,7 +65,12 @@ public class SigninPage extends AppCompatActivity implements View.OnClickListene
                     startActivity(new Intent(getApplicationContext(),HomePage.class));
                 }
             }
-        };
+        };*/
+        firebaseAuth = FirebaseAuth.getInstance();
+        if(firebaseAuth.getCurrentUser()!=null){
+            finish();
+            startActivity(new Intent(getApplicationContext(),HomePage.class));
+        }
 
 
     }

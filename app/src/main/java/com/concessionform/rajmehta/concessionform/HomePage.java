@@ -31,6 +31,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -46,6 +48,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
+    private FirebaseAuth firebaseAuth;
 
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
@@ -57,6 +60,10 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        String present = FirebaseAuth.getInstance().getUid();
+        Toast.makeText(getApplicationContext(),present, Toast.LENGTH_LONG).show();
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -78,22 +85,22 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         expListView = findViewById(R.id.lvExp);
 
         View hView = nvDrawer.getHeaderView(0);
-        final TextView emaildisp = hView.findViewById(R.id.emaildisp);
+        //final TextView emaildisp = hView.findViewById(R.id.emaildisp);
         final TextView sapdisp = hView.findViewById(R.id.sapdisp);
 
-        /*final FirebaseAuth auth = FirebaseAuth.getInstance();
+        final FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if(firebaseUser!=null){
-                    String email = firebaseUser.getEmail();
+                    //String email = firebaseUser.getEmail();
                     String sapid = firebaseUser.getUid();
-                    emaildisp.setText(email);
+                    //emaildisp.setText(email);
                     sapdisp.setText(sapid);
                 }
             }
-        };*/
+        };
 
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int width = metrics.widthPixels;
@@ -107,66 +114,50 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 int cp = (int) listAdapter.getGroupId(groupPosition);
-                if(cp==1){
-                    loadFragment(new ThirdFragment());
-                }
                 if(cp==2){
-                    loadFragment(new FourthFragment());
+                    Toast.makeText(getApplicationContext(),"PARENT 3",Toast.LENGTH_LONG).show();
+                    //loadFragment(new FourthFragment());
                 }
                 if(cp==3){
+                    Toast.makeText(getApplicationContext(),"PARENT 4",Toast.LENGTH_LONG).show();
+                }
+                if(cp==4){
                     FirebaseAuth.getInstance().signOut();
+                    finish();
                     startActivity(new Intent(getApplicationContext(),LoginPage.class));
+
                 }
                 return false;
             }
         });
 
-        expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+        /*expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
             @Override
             public void onGroupCollapse(int groupPosition) {
                 Toast.makeText(getApplicationContext(),"Collapsed", Toast.LENGTH_LONG).show();
             }
-        });
-
-
+        });*/
 
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-
+                int pp = (int) listAdapter.getGroupId(groupPosition);
                 int cp = (int) listAdapter.getChildId(groupPosition, childPosition);
-                /*Fragment fragment = null;
-                Class fragmentClass;
-
-                switch (cp){
-                    case 0:
-                        fragmentClass = FirstFragment.class;
-                        break;
-                    case 1:
-                        fragmentClass = SecondFragment.class;
-                        break;
-                    default:
-                        fragmentClass = FirstFragment.class;
-                }
-                try{
-                    fragment = (Fragment) fragmentClass.newInstance();
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.flContent,fragment).commit();
-                mDrawer.closeDrawers();*/
-
-                if(cp==0){
+                if(pp==0 && cp==0){
+                    Toast.makeText(getApplicationContext(),"CHILD 1.1",Toast.LENGTH_LONG).show();
                     loadFragment(new FirstFragment());
-                    //Toast.makeText(getApplicationContext(),"Pahila fragment daba",Toast.LENGTH_LONG).show();
                 }
-                if(cp==1){
+                if(pp==0 && cp==1){
+                    Toast.makeText(getApplicationContext(),"CHILD 1.2",Toast.LENGTH_LONG).show();
                     loadFragment(new SecondFragment());
-                    //Toast.makeText(getApplicationContext(), "Dui fragment daba", Toast.LENGTH_LONG).show();
                 }
-                //Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " : " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
+                if(pp==1 && cp==0){
+                    loadFragment(new ThirdFragment());
+                    Toast.makeText(getApplicationContext(),"CHILD 2.1",Toast.LENGTH_LONG).show();
+                }
+                if(pp==1 && cp==1){
+                    Toast.makeText(getApplicationContext(),"CHILD 2.2",Toast.LENGTH_LONG).show();
+                }
                 return true;
             }
         });
@@ -207,6 +198,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         listDataChild = new HashMap<String, List<String>>();
 
         listDataHeader.add("Railway Concession");
+        listDataHeader.add("Blogs");
         listDataHeader.add("Contact Us");
         listDataHeader.add("About");
         listDataHeader.add("Logout");
@@ -215,6 +207,17 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         concession.add("Apply for new form");
         concession.add("Check Form Status");
         listDataChild.put(listDataHeader.get(0),concession);
+
+        List<String> blogs = new ArrayList<String>();
+        blogs.add("Submit a blog");
+        blogs.add("Read blogs");
+        listDataChild.put(listDataHeader.get(1),blogs);
+
+        List<String> contact = new ArrayList<String>();
+        listDataChild.put(listDataHeader.get(2),contact);
+
+        List<String> about = new ArrayList<String>();
+        listDataChild.put(listDataHeader.get(3),about);
     }
 
     private ActionBarDrawerToggle setupDrawerToggle(){
